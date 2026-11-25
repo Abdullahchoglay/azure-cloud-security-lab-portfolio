@@ -1,0 +1,9 @@
+// Finds Azure Policy deny events in the dedicated security lab.
+AzureActivity
+| where TimeGenerated >= ago(24h)
+| where ResourceGroup =~ "acslab-security-rg"
+| where CategoryValue =~ "Policy"
+| where ActivityStatusValue in~ ("Failure", "Failed")
+| project TimeGenerated, OperationNameValue, ActivityStatusValue,
+    ResourceGroup, ResourceId, CorrelationId
+| order by TimeGenerated desc

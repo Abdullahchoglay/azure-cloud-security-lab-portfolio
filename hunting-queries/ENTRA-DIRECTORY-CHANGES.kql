@@ -1,0 +1,12 @@
+// Status: optional and prepared. Use only if Entra AuditLogs export is licensed and enabled.
+let Lookback = 24h;
+AuditLogs
+| where TimeGenerated >= ago(Lookback)
+| where Result =~ "success"
+| where OperationName has_any (
+    "Add user", "Update user", "Delete user",
+    "Add member to group", "Remove member from group")
+| extend Initiator=tostring(InitiatedBy.user.userPrincipalName)
+| extend Target=tostring(TargetResources[0].displayName)
+| project TimeGenerated, OperationName, Result, Initiator, Target, CorrelationId
+| order by TimeGenerated desc

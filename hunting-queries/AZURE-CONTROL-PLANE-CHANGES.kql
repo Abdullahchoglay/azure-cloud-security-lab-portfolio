@@ -1,0 +1,10 @@
+// Status: prepared; validate against the live AzureActivity schema before claiming results.
+// Purpose: surface successful write, delete, and action operations in the lab scope.
+let Lookback = 24h;
+AzureActivity
+| where TimeGenerated >= ago(Lookback)
+| where ActivityStatusValue =~ "Success"
+| where OperationNameValue has_any ("/write", "/delete", "/action")
+| project TimeGenerated, Caller, CallerIpAddress, OperationNameValue,
+    ResourceGroup, ResourceId, ActivityStatusValue, CorrelationId
+| order by TimeGenerated desc

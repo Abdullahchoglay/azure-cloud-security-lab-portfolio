@@ -1,0 +1,9 @@
+// Log Analytics query. Validate after the policy tests are run.
+AzureActivity
+| where TimeGenerated >= ago(24h)
+| where CategoryValue =~ 'Policy'
+    or OperationNameValue has 'Microsoft.Authorization/policies'
+    or ActivityStatusValue =~ 'Failed'
+| project TimeGenerated, Caller, OperationNameValue, ActivityStatusValue,
+    ResourceGroup, ResourceId, CorrelationId, Properties
+| order by TimeGenerated desc

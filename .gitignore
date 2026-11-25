@@ -1,0 +1,35 @@
+# Credentials and local Azure state
+.azure/
+*.token
+*.secret
+*.pfx
+*.pem
+*.key
+*.env
+.env.*
+
+# Parameters containing environment identifiers
+*.parameters.local.json
+*.bicepparam.local
+
+# Raw or unsanitized evidence
+evidence/private/
+screenshots/private/
+*.evtx
+*.har
+*.pcap
+*.pcapng
+raw-logs/
+
+# Generated outputs
+bin/
+obj/
+*.generated.json
+validation-results/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

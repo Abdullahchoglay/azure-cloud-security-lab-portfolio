@@ -1,0 +1,32 @@
+name: Validate repository
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Bicep CLI
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location --retry 3 -o bicep https://github.com/Azure/bicep/releases/download/v0.47.16/bicep-linux-x64
+          chmod +x bicep
+          sudo mv bicep /usr/local/bin/bicep
+
+      - name: Validate repository content
+        shell: pwsh
+        run: ./scripts/Test-Repository.ps1
+
+      - name: Check Markdown links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress --verbose './**/*.md'
+          fail: true

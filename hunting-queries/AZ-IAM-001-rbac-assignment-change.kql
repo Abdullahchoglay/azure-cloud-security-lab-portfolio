@@ -1,0 +1,9 @@
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where OperationNameValue in~ (
+    "Microsoft.Authorization/roleAssignments/write",
+    "Microsoft.Authorization/roleAssignments/delete")
+| where ResourceGroup =~ "acslab-security-rg"
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller,
+    ResourceGroup, ResourceId, CorrelationId
+| order by TimeGenerated desc

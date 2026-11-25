@@ -1,0 +1,6 @@
+using './main.bicep'
+
+param prefix = 'fictional-soc'
+param location = 'replace-after-price-check'
+param projectTag = 'sentinel-cloud-soc-lab'
+param expiryDate = '2099-12-31'

@@ -1,0 +1,13 @@
+// Status: prepared; enable the scheduled rule only after live AzureActivity validation.
+// Purpose: identify successful creation, modification, or deletion of diagnostic settings.
+let Lookback = 24h;
+AzureActivity
+| where TimeGenerated >= ago(Lookback)
+| where ActivityStatusValue =~ "Success"
+| where OperationNameValue in~ (
+    "Microsoft.Insights/diagnosticSettings/write",
+    "Microsoft.Insights/diagnosticSettings/delete")
+| extend Action = iff(OperationNameValue endswith "/delete", "Delete", "Write")
+| project TimeGenerated, Caller, CallerIpAddress, Action, OperationNameValue,
+    ResourceGroup, ResourceId, CorrelationId
+| order by TimeGenerated desc
